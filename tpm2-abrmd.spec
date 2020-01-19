@@ -1,6 +1,6 @@
 Name: tpm2-abrmd
 Version: 1.1.0
-Release: 10%{?dist}
+Release: 11%{?dist}
 Summary: A system daemon implementing TPM2 Access Broker and Resource Manager
 
 License: BSD
@@ -20,13 +20,15 @@ BuildRequires: pkgconfig(gio-unix-2.0)
 BuildRequires: pkgconfig(sapi)
 BuildRequires: pkgconfig(tcti-device)
 BuildRequires: pkgconfig(tcti-socket)
+# tpm2-abrmd build depends on tpm2-tss-devel for sapi/tcti-device/tcti-socket libs
+BuildRequires: tpm2-tss-devel%{?_isa} >= 1.4.0-1%{?dist}
 
 # this package does not support big endian arch so far,
 # and has been verified only on Intel platforms.
 ExclusiveArch: %{ix86} x86_64
 
-# tpm2-abrmd depends on tpm2-tss-devel for sapi/tcti-device/tcti-socket libs
-Requires: tpm2-tss-devel%{?_isa} >= 1.4.0-1%{?dist}
+# tpm2-abrmd depends on tpm2-tss for sapi/tcti-device/tcti-socket libs
+Requires: tpm2-tss%{?_isa} >= 1.4.0-1%{?dist}
 
 %description
 tpm2-abrmd is a system daemon implementing the TPM2 access broker (TAB) and
@@ -70,6 +72,8 @@ exit 0
 %package devel
 Summary: Headers, static libraries and package config files of tpm2-abrmd 
 Requires: %{name}%{_isa} = %{version}-%{release}
+# tpm2-abrmd-devel depends on tpm2-tss-devel for sapi/tcti-device/tcti-socket libs
+Requires: tpm2-tss-devel%{?_isa} >= 1.4.0-1%{?dist}
 
 %description devel
 This package contains headers, static libraries and package config files 
@@ -93,6 +97,12 @@ required to build applications that use tpm2-abrmd.
 %systemd_postun tpm2-abrmd.service
 
 %changelog
+* Wed Mar 25 2019 Jerry Snitselaar <jsnitsel@redhat.com> - 1.1.0-11
+- Fix Requires to be against tpm2-tss instead of tpm2-tss-devel
+- Add BuildRequires to specify version tpm2-tss-devel needed
+- Add Requires to tpm2-abrmd-devel for tpm2-tss-devel
+resolves: rhbz#1627827
+
 * Thu Sep 06 2018 Jerry Snitselaar <jsnitsel@redhat,com> - 1.1.0-10
 - update tpm2-tss-devel requirement to 1.4.0-1
 resolves: rhbz#1626227
