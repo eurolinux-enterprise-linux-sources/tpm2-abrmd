@@ -1,6 +1,6 @@
 Name: tpm2-abrmd
 Version: 1.1.0
-Release: 8%{?dist}
+Release: 10%{?dist}
 Summary: A system daemon implementing TPM2 Access Broker and Resource Manager
 
 License: BSD
@@ -26,7 +26,7 @@ BuildRequires: pkgconfig(tcti-socket)
 ExclusiveArch: %{ix86} x86_64
 
 # tpm2-abrmd depends on tpm2-tss-devel for sapi/tcti-device/tcti-socket libs
-Requires: tpm2-tss-devel%{?_isa} >= 1.1.0-1%{?dist} 
+Requires: tpm2-tss-devel%{?_isa} >= 1.4.0-1%{?dist}
 
 %description
 tpm2-abrmd is a system daemon implementing the TPM2 access broker (TAB) and
@@ -44,7 +44,7 @@ autoreconf -vif
 
 %install
 %make_install
-mv %{buildroot}/%{_udevrulesdir}/tpm-udev.rules %{buildroot}/%{_udevrulesdir}/60-tpm-udev.rules
+rm -f %{buildroot}/%{_udevrulesdir}/tpm-udev.rules
 find %{buildroot}%{_libdir} -type f -name \*.la -delete
 
 %pre
@@ -61,7 +61,6 @@ exit 0
 %{_sbindir}/tpm2-abrmd
 %config(noreplace) %{_sysconfdir}/dbus-1/system.d/tpm2-abrmd.conf
 %{_unitdir}/tpm2-abrmd.service
-%{_udevrulesdir}/60-tpm-udev.rules
 %{_mandir}/man3/tss2_tcti_tabrmd_init.3.gz
 %{_mandir}/man3/tss2_tcti_tabrmd_init_full.3.gz
 %{_mandir}/man7/tcti-tabrmd.7.gz
@@ -94,6 +93,14 @@ required to build applications that use tpm2-abrmd.
 %systemd_postun tpm2-abrmd.service
 
 %changelog
+* Thu Sep 06 2018 Jerry Snitselaar <jsnitsel@redhat,com> - 1.1.0-10
+- update tpm2-tss-devel requirement to 1.4.0-1
+resolves: rhbz#1626227
+
+* Mon Jun 18 2018 Jerry Snitselaar <jsnitsel@redhat.com> - 1.1.0-9
+- udev rules moved to tpm2-tss package.
+resolves: rhbz#1592583
+
 * Thu Dec 14 2017 Jerry Snitselaar <jsnitsel@redhat.com> - 1.1.0-8
 - Fix package version used by autoconf
 resolves: rhbz#1492466
