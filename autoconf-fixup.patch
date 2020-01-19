@@ -1,0 +1,10 @@
+diff -urN tpm2-abrmd-1.1.0/configure.ac tpm2-abrmd-1.1.0-new/configure.ac
+--- tpm2-abrmd-1.1.0/configure.ac	2017-07-01 12:39:29.000000000 -0700
++++ tpm2-abrmd-1.1.0-new/configure.ac	2017-12-14 14:04:04.768415662 -0700
+@@ -1,5 +1,4 @@
+-AC_INIT([tpm2-abrmd],
+-        [m4_esyscmd_s([git describe --tags --always --dirty])])
++AC_INIT([tpm2-abrmd],[1.1.0])
+ AC_CONFIG_MACRO_DIR([m4])
+ AC_PROG_CC
+ AC_PROG_LN_S

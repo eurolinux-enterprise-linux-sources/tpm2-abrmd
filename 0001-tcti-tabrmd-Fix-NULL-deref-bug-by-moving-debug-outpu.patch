@@ -1,0 +1,50 @@
+From 418d49669a33f9e6b029787e3869b3a534bb7de8 Mon Sep 17 00:00:00 2001
+From: Philip Tricca <philip.b.tricca@intel.com>
+Date: Mon, 14 Aug 2017 13:57:51 -0700
+Subject: [PATCH] tcti-tabrmd: Fix NULL deref bug by moving debug output after
+ NULL check.
+
+This one speaks for itself: The debug output dereferences the pointer to
+the context structure before checking for NULL. Switching these two
+things around fixes the issue.
+
+Signed-off-by: Philip Tricca <philip.b.tricca@intel.com>
+---
+ src/tcti-tabrmd.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/tcti-tabrmd.c b/src/tcti-tabrmd.c
+index 970702c..134cf8d 100644
+--- a/src/tcti-tabrmd.c
++++ b/src/tcti-tabrmd.c
+@@ -293,11 +293,11 @@ tss2_tcti_tabrmd_cancel (TSS2_TCTI_CONTEXT *context)
+     GError *error = NULL;
+     gboolean cancel_ret;
+ 
+-    g_info("tss2_tcti_tabrmd_cancel: id 0x%" PRIx64,
+-           TSS2_TCTI_TABRMD_ID (context));
+     if (context == NULL) {
+         return TSS2_TCTI_RC_BAD_CONTEXT;
+     }
++    g_info("tss2_tcti_tabrmd_cancel: id 0x%" PRIx64,
++           TSS2_TCTI_TABRMD_ID (context));
+     if (TSS2_TCTI_TABRMD_STATE (context) != TABRMD_STATE_RECEIVE) {
+         return TSS2_TCTI_RC_BAD_SEQUENCE;
+     }
+@@ -346,11 +346,11 @@ tss2_tcti_tabrmd_set_locality (TSS2_TCTI_CONTEXT *context,
+     TSS2_RC ret = TSS2_RC_SUCCESS;
+     GError *error = NULL;
+ 
+-    g_info ("tss2_tcti_tabrmd_set_locality: id 0x%" PRIx64,
+-            TSS2_TCTI_TABRMD_ID (context));
+     if (context == NULL) {
+         return TSS2_TCTI_RC_BAD_CONTEXT;
+     }
++    g_info ("tss2_tcti_tabrmd_set_locality: id 0x%" PRIx64,
++            TSS2_TCTI_TABRMD_ID (context));
+     if (TSS2_TCTI_TABRMD_STATE (context) != TABRMD_STATE_TRANSMIT) {
+         return TSS2_TCTI_RC_BAD_SEQUENCE;
+     }
+-- 
+2.13.6
+
